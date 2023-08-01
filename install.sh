@@ -174,7 +174,7 @@ BOOTSTRAP_ANS=""
 function bootstrap() {
   if [[ ! -z $1 ]]; then
     if whiptail --yesno "Would you like to bootstrap the chain?" 8 42; then
-      BOOTSTRAP_ANS=1
+      BOOTSTRAP_ANS=0
     fi
   elif [[ ! -z $BOOTSTRAP_ANS ]]; then
     echo -e "${YELLOW}Downloading wallet bootstrap and powcache.dat file please be patient...${NC}"
