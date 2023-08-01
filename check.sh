@@ -1,17 +1,17 @@
 #!/bin/bash
 # URLs for raptoreum explorers. Main and backup one.
-URL=( 'https://explorer.raptoreum.com/' 'https://raptor.mopsus.com/' )
+URL=( 'https://explorer.neoxa.net' 'https://explorer.neoxa.net' )
 URL_ID=0
 
-BOOTSTRAP_TAR='https://bootstrap.raptoreum.com/bootstraps/bootstrap.tar.xz'
+#BOOTSTRAP_TAR='https://bootstrap.raptoreum.com/bootstraps/bootstrap.tar.xz'
 
 POSE_SCORE=0
 PREV_SCORE=0
 LOCAL_HEIGHT=0
 # Variables provided by cron job enviroment variable.
 # They should also be added into .bashrc for user use.
-#RAPTOREUM_CLI    -> Path to the raptoreum-cli
-#CONFIG_DIR/HOME  -> Path to "$HOME/.raptoreumcore/"
+#NEOXA_CLI    -> Path to the neoxa-cli
+#CONFIG_DIR/HOME  -> Path to "$HOME/.neoxacore/"
 
 # Add your NODE_PROTX here if you forgot or provided wrong hash during node
 # installation.
@@ -19,15 +19,15 @@ LOCAL_HEIGHT=0
 
 # Prepare some variables that can be set if the user is runing the script
 # manually but are set in cron job enviroment.
-if [[ -z $RAPTOREUM_CLI ]]; then
-  RAPTOREUM_CLI=$(which raptoreum-cli)
+if [[ -z $NEOXA_CLI ]]; then
+  NEOXA_CLI=$(which neoxa-cli)
 fi
 
 if [[ -z $CONFIG_DIR ]]; then
   if [[ -z $HOME ]]; then
     HOME="/home/$USER/"
   fi
-  CONFIG_DIR="$HOME/.raptoreumcore/"
+  CONFIG_DIR="$HOME/.neoxacore/"
 fi
 
 function GetNumber () {
@@ -45,7 +45,7 @@ function ReadValue () {
 # Allow read anything from CLI with $@ arguments. Timeout after 300s.
 function ReadCli () {
   # This should just echo (return) value with standard stdout.
-  ${RAPTOREUM_CLI} $@ &
+  ${NEOXA_CLI} $@ &
   PID=$!
   for i in {0..60}; do
     sleep 1
@@ -54,7 +54,7 @@ function ReadCli () {
       return
     fi
   done
-  # raptoreum-cli did not return after 300s. kill the PID and exit with -1.
+  # neoxa-cli did not return after 300s. kill the PID and exit with -1.
   kill -9 $PID
   echo -1
 }
