@@ -155,16 +155,17 @@ onlynet=ipv4
 EOF
 }
 
+
 function install_bins() {
   echo -e "${YELLOW}Installing latest binaries...${NC}"
   if [[ $(lsb_release -r) = *20* ]]; then
-    VERSION='linux64'
+    VERSION='ubuntu20'
   elif [[ $(lsb_release -r) = *22* ]]; then
-    VERSION='linux64'
+    VERSION='ubuntu22'
   fi
-  WALLET_TAR=\$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'$VERSION'.")) | .browser_download_url')
+  WALLET_TAR=$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'$VERSION'.")) | .browser_download_url')
   mkdir temp
-  curl -L \$WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/\$COIN_DAEMON ./temp/\$COIN_CLI \$COIN_PATH
+  curl -L $WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/$COIN_DAEMON ./temp/$COIN_CLI ./temp/$COIN_TX $COIN_PATH
   sudo chmod 755 ${COIN_PATH}/${COIN_NAME}*
   rm -rf temp
 }
