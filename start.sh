@@ -1,8 +1,8 @@
 #!/bin/bash
 
-EXECUTABLE='raptoreumd'
-DIR='/raptoreum/.raptoreumcore'
-CONF_FILE='raptoreum.conf'
+EXECUTABLE='neoxad'
+DIR='/neoxa/.neoxacore'
+CONF_FILE='neoxa.conf'
 FILE=$DIR/$CONF_FILE
 
 
@@ -21,14 +21,6 @@ par=2
 dbcache=1024
 smartnodeblsprivkey=${BLS_KEY}
 externalip=${EXTERNALIP}
-addnode=explorer.raptoreum.com
-addnode=209.151.150.72
-addnode=94.237.79.27
-addnode=95.111.216.12
-addnode=198.100.149.124
-addnode=198.100.146.111
-addnode=5.135.187.46
-addnode=5.135.179.95
 EOF
   else
     cat << EOF > $FILE
@@ -38,23 +30,14 @@ rpcallowip=127.0.0.1
 rpcbind=127.0.0.1
 server=1
 listen=1
-addnode=explorer.raptoreum.com
-addnode=raptor.mopsus.com
-addnode=209.151.150.72
-addnode=94.237.79.27
-addnode=95.111.216.12
-addnode=198.100.149.124
-addnode=198.100.146.111
-addnode=5.135.187.46
-addnode=5.135.179.95
 EOF
   fi
 fi
 
 # Setup logrotate for debug log
-touch /etc/logrotate.d/rtmdebuglog
-cat << EOF > /etc/logrotate.d/rtmdebuglog
-/raptoreum/.raptoreumcore/debug.log {
+touch /etc/logrotate.d/neoxadebuglog
+cat << EOF > /etc/logrotate.d/neoxadebuglog
+/neoxa/.neoxacore/debug.log {
   compress
   copytruncate
   missingok
@@ -69,7 +52,7 @@ if [ ! -e /usr/local/bin/healthcheck.sh ]; then
   cat << EOF > healthcheck.sh
 #!/bin/bash
 
-POSE_SCORE=\$(curl -s "https://explorer.raptoreum.com/api/protx?command=info&protxhash=${PROTX_HASH}" | jq -r '.state.PoSePenalty')
+POSE_SCORE=\$(curl -s "https://explorer.neoxa.net/api/protx?command=info&protxhash=${PROTX_HASH}" | jq -r '.state.PoSePenalty')
 if ((POSE_SCORE>0)); then
   kill -15 -1
   sleep 15
