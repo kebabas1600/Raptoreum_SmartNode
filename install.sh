@@ -158,9 +158,9 @@ EOF
 function install_bins() {
   echo -e "${YELLOW}Installing latest binaries...${NC}"
   if [[ $(lsb_release -r) = *20* ]]; then
-    VERSION='linux'
+    VERSION='linux64'
   elif [[ $(lsb_release -r) = *22* ]]; then
-    VERSION='linux'
+    VERSION='linux64'
   fi
   WALLET_TAR=\$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'$VERSION'.")) | .browser_download_url')
   mkdir temp
