@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DIR='/raptoreum/.raptoreumcore'
-BOOTSTRAP_TAR='https://bootstrap.raptoreum.com/bootstraps/bootstrap.tar.xz'
-POWCACHE='https://github.com/dk808/Raptoreum_SmartNode/releases/download/v1.0.0/powcache.dat'
+DIR='/neoxa/.neoxa'
+#BOOTSTRAP_TAR='https://bootstrap.raptoreum.com/bootstraps/bootstrap.tar.xz'
+#POWCACHE='https://github.com/dk808/Raptoreum_SmartNode/releases/download/v1.0.0/powcache.dat'
 
 if [ ! -d $DIR ]; then
   mkdir -p $DIR
