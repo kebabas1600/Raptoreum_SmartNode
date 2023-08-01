@@ -164,7 +164,7 @@ function install_bins() {
   fi
   WALLET_TAR=$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'$VERSION'.")) | .browser_download_url')
   mkdir temp
-  curl -L $WALLET_TAR | zip xz -C ./temp; sudo mv ./temp/$COIN_DAEMON ./temp/$COIN_CLI $COIN_PATH
+  curl -L $WALLET_TAR | unzip ./temp; sudo mv ./temp/$COIN_DAEMON ./temp/$COIN_CLI $COIN_PATH
   sudo chmod 755 ${COIN_PATH}/${COIN_NAME}*
   rm -rf temp
 }
