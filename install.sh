@@ -162,7 +162,7 @@ function install_bins() {
   elif [[ $(lsb_release -r) = *22* ]]; then
     VERSION='linux64'
   fi
-  WALLET_TAR=$(curl -s https://github.com/NeoxaChain/Neoxa/releases/download/v5.1.1.4/neoxad-5.1.1.4-linux64.zip | .browser_download_url')
+  WALLET_TAR=\$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'\$VERSION'.")) | .browser_download_url')
   mkdir temp
   curl -L \$WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/\$COIN_DAEMON ./temp/\$COIN_CLI \$COIN_PATH
   sudo chmod 755 ${COIN_PATH}/${COIN_NAME}*
