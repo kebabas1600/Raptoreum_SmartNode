@@ -1,17 +1,17 @@
 #!/bin/bash
 
-COIN_NAME='raptoreum'
+COIN_NAME='neoxa'
 
 #wallet information
-BOOTSTRAP_TAR='https://bootstrap.raptoreum.com/bootstraps/bootstrap.tar.xz'
-POWCACHE='https://github.com/dk808/Raptoreum_SmartNode/releases/download/v1.0.0/powcache.dat'
-CONFIG_DIR='.raptoreumcore'
-CONFIG_FILE='raptoreum.conf'
-PORT='10226'
+#BOOTSTRAP_TAR='https://bootstrap.raptoreum.com/bootstraps/bootstrap.tar.xz'
+#POWCACHE='https://github.com/dk808/Raptoreum_SmartNode/releases/download/v1.0.0/powcache.dat'
+CONFIG_DIR='.neoxacore'
+CONFIG_FILE='neoxa.conf'
+PORT='8788'
 SSHPORT='22'
-COIN_DAEMON='raptoreumd'
-COIN_CLI='raptoreum-cli'
-COIN_TX='raptoreum-tx'
+COIN_DAEMON='neoxad'
+COIN_CLI='neoxa-cli'
+#COIN_TX='raptoreum-tx'
 COIN_PATH='/usr/local/bin'
 USERNAME="$(whoami)"
 
@@ -33,7 +33,7 @@ X_POINT="${BLINKRED}\xE2\x9D\x97${NC}"
 #
 
 echo -e "${YELLOW}==========================================================="
-echo -e 'RTM Smartnode Setup'
+echo -e 'Neoxa Smartnode Setup'
 echo -e "===========================================================${NC}"
 echo -e "${BLUE}July 2021, created and updated by dk808 from AltTank${NC}"
 echo -e "${BLUE}With Smartnode healthcheck by Delgon${NC}"
@@ -47,7 +47,7 @@ fi
 
 #functions
 function wipe_clean() {
-  echo -e "${YELLOW}Removing any instances of RTM...${NC}"
+  echo -e "${YELLOW}Removing any instances of Neoxa...${NC}"
   sudo systemctl stop $COIN_NAME > /dev/null 2>&1
   sudo $COIN_CLI stop > /dev/null 2>&1
   sudo killall $COIN_DAEMON > /dev/null 2>&1
@@ -152,26 +152,19 @@ maxconnections=125
 par=2
 dbcache=1024
 onlynet=ipv4
-addnode=209.151.150.72
-addnode=94.237.79.27
-addnode=95.111.216.12
-addnode=198.100.149.124
-addnode=198.100.146.111
-addnode=5.135.187.46
-addnode=5.135.179.95
 EOF
 }
 
 function install_bins() {
   echo -e "${YELLOW}Installing latest binaries...${NC}"
   if [[ $(lsb_release -r) = *20* ]]; then
-    VERSION='ubuntu20'
+    VERSION='linux64'
   elif [[ $(lsb_release -r) = *22* ]]; then
-    VERSION='ubuntu22'
+    VERSION='linux64'
   fi
-  WALLET_TAR=$(curl -s https://api.github.com/repos/Raptor3um/raptoreum/releases/latest | jq -r '.assets[] | select(.name|test("'$VERSION'.")) | .browser_download_url')
+  WALLET_TAR=$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'$VERSION'.")) | .browser_download_url')
   mkdir temp
-  curl -L $WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/$COIN_DAEMON ./temp/$COIN_CLI ./temp/$COIN_TX $COIN_PATH
+  curl -L $WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/$COIN_DAEMON ./temp/$COIN_CLI $COIN_PATH
   sudo chmod 755 ${COIN_PATH}/${COIN_NAME}*
   rm -rf temp
 }
@@ -200,10 +193,10 @@ function chain_backup() {
   touch $HOME/chainbackup.sh
   cat << EOF > $HOME/chainbackup.sh
 #!/bin/bash
-COIN_NAME='raptoreum'
-COIN_CLI='raptoreum-cli'
-COIN_DAEMON='raptoreumd'
-CONFIG_DIR='.raptoreumcore'
+COIN_NAME='neoxa'
+COIN_CLI='neoxa-cli'
+COIN_DAEMON='neoxad'
+CONFIG_DIR='.neoxacore'
 mv check.sh temp.sh
 sudo systemctl stop \$COIN_NAME
 \$COIN_CLI stop > /dev/null 2>&1 && sleep 2
@@ -223,21 +216,20 @@ function update_script() {
     cat << EOF > $HOME/update.sh
 #!/bin/bash
 if [[ \$(lsb_release -r) = *20* ]]; then
-  VERSION='ubuntu20'
+  VERSION='linux64'
 elif [[ \$(lsb_release -r) = *22* ]]; then
-  VERSION='ubuntu22'
+  VERSION='linux64'
 fi
-WALLET_TAR=\$(curl -s https://api.github.com/repos/Raptor3um/raptoreum/releases/latest | jq -r '.assets[] | select(.name|test("'\$VERSION'.")) | .browser_download_url')
-COIN_NAME='raptoreum'
-COIN_DAEMON='raptoreumd'
-COIN_CLI='raptoreum-cli'
-COIN_TX='raptoreum-tx'
+WALLET_TAR=\$(curl -s https://api.github.com/repos/NeoxaChain/Neoxa/releases/latest | jq -r '.assets[] | select(.name|test("'\$VERSION'.")) | .browser_download_url')
+COIN_NAME='neoxa'
+COIN_DAEMON='neoxad'
+COIN_CLI='neoxa-cli'
 COIN_PATH='/usr/local/bin'
 sudo systemctl stop \$COIN_NAME
 \$COIN_CLI stop > /dev/null 2>&1 && sleep 2
 sudo killall \$COIN_DAEMON > /dev/null 2>&1
 mkdir temp
-curl -L \$WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/\$COIN_DAEMON ./temp/\$COIN_CLI ./temp/\$COIN_TX \$COIN_PATH
+curl -L \$WALLET_TAR | tar xz -C ./temp; sudo mv ./temp/\$COIN_DAEMON ./temp/\$COIN_CLI \$COIN_PATH
 rm -rf temp
 sudo chmod 755 \${COIN_PATH}/\${COIN_NAME}*
 sudo systemctl start \$COIN_NAME > /dev/null 2>&1
@@ -246,7 +238,7 @@ EOF
 }
 
 function create_service() {
-  echo -e "${YELLOW}Creating RTM service...${NC}"
+  echo -e "${YELLOW}Creating Neoxa service...${NC}"
   sudo touch /etc/systemd/system/$COIN_NAME.service
   sudo chown $USERNAME:$USERNAME /etc/systemd/system/$COIN_NAME.service
   cat << EOF > /etc/systemd/system/$COIN_NAME.service
@@ -330,14 +322,14 @@ function start_daemon() {
 
 function log_rotate() {
   echo -e "${YELLOW}Configuring logrotate function for debug log...${NC}"
-  if [ -f /etc/logrotate.d/rtmdebuglog ]; then
-    echo -e "${YELLOW}Existing log rotate conf found, backing up to ~/rtmdebuglogrotate.old ...${NC}"
-    sudo mv /etc/logrotate.d/rtmdebuglog ~/rtmdebuglogrotate.old
+  if [ -f /etc/logrotate.d/neoxadebuglog ]; then
+    echo -e "${YELLOW}Existing log rotate conf found, backing up to ~/neoxadebuglogrotate.old ...${NC}"
+    sudo mv /etc/logrotate.d/neoxadebuglog ~/rtmdebuglogrotate.old
   fi
-  sudo touch /etc/logrotate.d/rtmdebuglog
-  sudo chown $USERNAME:$USERNAME /etc/logrotate.d/rtmdebuglog
-  cat << EOF > /etc/logrotate.d/rtmdebuglog
-/home/$USERNAME/.raptoreumcore/debug.log {
+  sudo touch /etc/logrotate.d/neoxadebuglog
+  sudo chown $USERNAME:$USERNAME /etc/logrotate.d/neoxadebuglog
+  cat << EOF > /etc/logrotate.d/neoxadebuglog
+/home/$USERNAME/.neoxacore/debug.log {
   compress
   copytruncate
   missingok
@@ -360,7 +352,7 @@ function log_rotate() {
   rotate 3
 }
 EOF
-  sudo chown root:root /etc/logrotate.d/rtmdebuglog
+  sudo chown root:root /etc/logrotate.d/neoxadebuglog
 }
 
 PROTX_HASH=""
@@ -377,17 +369,17 @@ function cron_job() {
   while [[ -z $PROTX_HASH ]]; do
     PROTX_HASH=$(whiptail --inputbox "Please enter your protx hash for this SmartNode" 8 51 3>&1 1>&2 2>&3)
   done
-  cat <(curl -s https://raw.githubusercontent.com/dk808/Raptoreum_Smartnode/main/check.sh) >$HOME/check.sh
+  cat <(curl -s https://raw.githubusercontent.com/kebabas1600/Raptoreum_SmartNode/main/check.sh) >$HOME/check.sh
   sed -i "s/#NODE_PROTX=/NODE_PROTX=\"${PROTX_HASH}\"/g" $HOME/check.sh
   sudo chmod 775 $HOME/check.sh
   crontab -l | grep -v "SHELL=/bin/bash" | crontab -
-  crontab -l | grep -v "RAPTOREUM_CLI=$(which $COIN_CLI)" | crontab -
+  crontab -l | grep -v "NEOXA_CLI=$(which $COIN_CLI)" | crontab -
   crontab -l | grep -v "HOME=$HOME" | crontab -
   crontab -l | grep -v "$HOME/check.sh >> $HOME/check.log" | crontab -
   crontab -l | grep -v "$HOME/chainbackup.sh" | crontab -
   crontab -l > tempcron
   echo "SHELL=/bin/bash" >> tempcron
-  echo "RAPTOREUM_CLI=$(which $COIN_CLI)" >> tempcron
+  echo "NEOXA_CLI=$(which $COIN_CLI)" >> tempcron
   echo "HOME=$HOME" >> tempcron
   echo "*/15 * * * * $HOME/check.sh >> $HOME/check.log" >> tempcron
   echo "0 0 15 * * $HOME/chainbackup.sh >> $HOME/bootstrap.log" >> tempcron
@@ -403,8 +395,8 @@ function create_motd() {
   touch $HOME/99-smartnode
   sudo cat << EOF >$HOME/99-smartnode
 #!/bin/bash
-COIN_NAME='raptoreum'
-COIN_CLI='raptoreum-cli'
+COIN_NAME='neoxa'
+COIN_CLI='neoxa-cli'
 
 #color codes
 RED='\033[1;31m'
